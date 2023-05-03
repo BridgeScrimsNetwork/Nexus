@@ -1,0 +1,5 @@
+name: Nexus
+version: ${project.version}
+main: net.bridgescrims.nexus.Nexus
+depend: [ ProtocolLib ]
+api-version: 1.8

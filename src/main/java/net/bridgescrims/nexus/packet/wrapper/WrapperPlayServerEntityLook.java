@@ -1,4 +1,4 @@
-package net.bridgescrims.nexus.wrapper;
+package net.bridgescrims.nexus.packet.wrapper;
 /**
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
  * Copyright (C) dmulloy2 <http://dmulloy2.net>

@@ -1,4 +1,4 @@
-package net.bridgescrims.nexus.wrapper;
+package net.bridgescrims.nexus.packet.wrapper;
 
 
 import org.bukkit.World;
