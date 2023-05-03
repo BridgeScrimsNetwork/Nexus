@@ -18,7 +18,7 @@ public class Stand {
     private MinecraftServer nmsServer;
     private WorldServer nmsWorld;
     private GameProfile gameProfile;
-    private EntityPlayer player;
+    public EntityPlayer player;
 
     public Stand(UUID uuid, String username, double x, double y, double z) {
         nmsServer = ((CraftServer) Bukkit.getServer()).getServer();;
@@ -59,6 +59,14 @@ public class Stand {
     public void teleport(int x, int y, int z, Double yaw, Double pitch, boolean onGround) {
         PacketUtils.pushPacketGlobally(
                 new PacketPlayOutEntityTeleport(player.getId(), x, y, z, yaw.byteValue(), pitch.byteValue(), onGround)
+        );
+    }
+
+    public void metadata(byte metadata) {
+        DataWatcher dataWatcher = player.getDataWatcher();
+        dataWatcher.watch(0, metadata);
+        PacketUtils.pushPacketGlobally(
+                new PacketPlayOutEntityMetadata(player.getId(),dataWatcher, false)
         );
     }
 }

@@ -1,5 +1,7 @@
 package net.bridgescrims.nexus.stand;
 
+import net.minecraft.server.v1_8_R3.DataWatcher;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -76,6 +78,11 @@ public class StandManager {
                 onGround = Boolean.valueOf(split[7]);
 
                 getStand(uuid).teleport(x, y, z, yaw, pitch, onGround);
+                break;
+            case "ENTITY_METADATA":
+                byte metadata = Byte.parseByte(split[2]);
+
+                getStand(uuid).metadata(metadata);
                 break;
         }
     }

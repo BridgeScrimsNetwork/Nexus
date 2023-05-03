@@ -13,8 +13,10 @@ import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import net.bridgescrims.nexus.packet.PacketSerialiser;
 import net.bridgescrims.nexus.redis.RecvListener;
+import net.bridgescrims.nexus.stand.Stand;
 import net.bridgescrims.nexus.stand.StandManager;
 import net.bridgescrims.nexus.packet.wrapper.*;
+import net.bridgescrims.nexus.utils.PacketUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -47,13 +49,13 @@ public class Nexus extends JavaPlugin implements Listener {
     }
 
     public void createRedis() {
-        redisClient = RedisClient.create(new RedisURI("localhost", 6379, Duration.ZERO));
+        redisClient = RedisClient.create("redis://password@localhost:6379/0");
 
         redisConnection = redisClient.connect();
         commands = redisConnection.sync();
 
         StatefulRedisPubSubConnection<String, String> subscribeConnection = redisClient.connectPubSub();
-//        subscribeConnection.addListener(new RecvListener(this));
+        subscribeConnection.addListener(new RecvListener(this));
 
         RedisPubSubAsyncCommands<String, String> async = subscribeConnection.async();
         async.subscribe(getConfig().getString("recv-name"));
@@ -120,10 +122,24 @@ public class Nexus extends JavaPlugin implements Listener {
                 }
             }
         });
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata(event.getPacket());
+                UUID uuid = ids.get(packet.getEntityID());
+                if (uuid != null) {
+                    //standManager.getStand(uuid).teleport((int) packet.getX(), (int) packet.getY(), (int) packet.getZ(), (double) packet.getYaw(), (double) packet.getPitch(), packet.getOnGround());
+                    String serialised = PacketSerialiser.ENTITY_METADATA(uuid, (byte) packet.getMetadata().get(0).getValue());
+                    System.out.println(serialised);
+                    sendSerialisedPacket(serialised);
+                }
+            }
+        });
     }
 
     public void sendSerialisedPacket(String data) {
-        standManager.sendSerialisedPacket(data);
+        //standManager.sendSerialisedPacket(data);
+        System.out.println(data);
         commands.publish(getConfig().getString("send-name"), data);
     }
 
@@ -135,6 +151,10 @@ public class Nexus extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         ids.put(e.getPlayer().getEntityId(), e.getPlayer().getUniqueId());
         sendSerialisedPacket("CREATE" + "|" + e.getPlayer().getUniqueId() + "|" + e.getPlayer().getName() + "|" + (int) e.getPlayer().getLocation().getX() + "|" + (int) e.getPlayer().getLocation().getY() + "|" + (int) e.getPlayer().getLocation().getZ());
+
+        for (Stand stand : getStandManager().stands.values()) {
+            PacketUtils.showEntityPlayer(stand.player, e.getPlayer());
+        }
         //standManager.createStand(e.getPlayer().getUniqueId(), e.getPlayer().getName(), e.getPlayer().getLocation().getX(), e.getPlayer().getLocation().getY(), e.getPlayer().getLocation().getZ());
     }
     @EventHandler
