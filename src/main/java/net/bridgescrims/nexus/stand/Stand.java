@@ -10,8 +10,10 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Stand {
     private UUID uuid;
@@ -74,5 +76,20 @@ public class Stand {
         PacketUtils.pushPacketGlobally(
                 new PacketPlayOutAnimation(player, animation) // WHY!! WHY DO SOME PACKETS TAKE ENTITIES AND SOME TAKE IDS!! I HATE IT! I HATE IT HERE!
         );
+    }
+
+    public void chat(String msg) {
+        for (Player onlinePlayer : Nexus.INSTANCE.getServer().getOnlinePlayers()) {
+            onlinePlayer.sendMessage(player.getName() + " : " + msg);
+        }
+        // why is this busted:
+        //player.getBukkitEntity().chat(msg);
+    }
+
+    public void kill() {
+        player.getBukkitEntity().remove();
+        for (Player onlinePlayer: Nexus.INSTANCE.getServer().getOnlinePlayers()) {
+            PacketUtils.destroyEntityPlayer(player, onlinePlayer);
+        }
     }
 }

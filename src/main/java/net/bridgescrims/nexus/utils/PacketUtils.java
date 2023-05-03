@@ -13,6 +13,11 @@ public class PacketUtils {
         connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) (npc.yaw * 256 / 360))); // Correct head rotation when spawned in player look direction.
     }
 
+    public static void destroyEntityPlayer(EntityPlayer npc, Player player) {  // https://www.spigotmc.org/threads/how-to-create-and-modify-npcs.400753/
+        PlayerConnection connection = ((CraftPlayer)player).getHandle().playerConnection;
+        connection.sendPacket(new PacketPlayOutEntityDestroy(npc.getId()));
+    }
+
     public static void pushPacketGlobally(Packet packet) {
         for (Player onlinePlayer : Nexus.INSTANCE.getServer().getOnlinePlayers()) {
             ((CraftPlayer) onlinePlayer).getHandle().playerConnection.sendPacket(packet);

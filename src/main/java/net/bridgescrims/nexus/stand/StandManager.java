@@ -106,6 +106,17 @@ public class StandManager {
 
                 getStand(uuid).animation(animation);
                 break;
+            case "CHAT":
+                String msg = split[2];
+
+                getStand(uuid).chat(msg);
+                break;
+            case "KILL":
+                idUuids.remove(getStand(uuid).player.getId());
+                getStand(uuid).kill();
+                standIds.remove(uuid);
+                stands.remove(uuid);
+                break;
             // THIS IS SO FUCKED LOL
 //        case "USE_ENTITY":
 //            UUID source = UUID.fromString(split[2]);

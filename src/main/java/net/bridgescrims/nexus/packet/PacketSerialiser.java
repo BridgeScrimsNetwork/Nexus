@@ -1,6 +1,7 @@
 package net.bridgescrims.nexus.packet;
 
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,5 +32,9 @@ public class PacketSerialiser {
 
     public static String USE_ENTITY(UUID uuid, UUID source, String action) {
         return "USE_ENTITY" + "|" + uuid.toString() + "|" + source.toString() + "|" + action;
+    }
+
+    public static String CHAT(UUID uuid, String message) {
+        return "CHAT" + "|" + uuid.toString() + "|" + message.replace("\\|", "");
     }
 }

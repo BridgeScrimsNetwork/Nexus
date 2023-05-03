@@ -17,8 +17,13 @@ import net.bridgescrims.nexus.stand.Stand;
 import net.bridgescrims.nexus.stand.StandManager;
 import net.bridgescrims.nexus.packet.wrapper.*;
 import net.bridgescrims.nexus.utils.PacketUtils;
+import net.minecraft.server.v1_8_R3.WorldServer;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,7 +54,7 @@ public class Nexus extends JavaPlugin implements Listener {
     }
 
     public void createRedis() {
-        redisClient = RedisClient.create("redis://password@localhost:6379/0");
+        redisClient = RedisClient.create(RedisURI.Builder.redis("localhost", 6379).build());
 
         redisConnection = redisClient.connect();
         commands = redisConnection.sync();
@@ -187,6 +192,13 @@ public class Nexus extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         ids.remove(e.getPlayer().getUniqueId());
+        sendSerialisedPacket("KILL" + "|" + e.getPlayer().getUniqueId());
         //standManager.createStand(e.getPlayer().getUniqueId(), e.getPlayer().getName(), e.getPlayer().getLocation().getX(), e.getPlayer().getLocation().getY(), e.getPlayer().getLocation().getZ());
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent e) {
+        String serialised = PacketSerialiser.CHAT(e.getPlayer().getUniqueId(), e.getMessage());
+        sendSerialisedPacket(serialised);
     }
 }

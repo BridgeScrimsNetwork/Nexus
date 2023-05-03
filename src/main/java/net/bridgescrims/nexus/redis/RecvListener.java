@@ -2,7 +2,6 @@ package net.bridgescrims.nexus.redis;
 
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import net.bridgescrims.nexus.Nexus;
-import redis.clients.jedis.JedisPubSub;
 
 public class RecvListener extends RedisPubSubAdapter<String, String> {
     private Nexus plugin;
