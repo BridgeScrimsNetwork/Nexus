@@ -1,6 +1,7 @@
 # Nexus
-nexus is a schizophrenic feverdream i had for syncing players between  lobbyservers in different continents
-it barely works
+nexus is a schizophrenic feverdream i had for syncing players between lobby servers in different continents
+
+it barely works, please do not use this except for testing
 
 bugs include:
 players randomly turn into fire
