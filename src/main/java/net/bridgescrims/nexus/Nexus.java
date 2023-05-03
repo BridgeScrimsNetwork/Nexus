@@ -135,6 +135,18 @@ public class Nexus extends JavaPlugin implements Listener {
                 }
             }
         });
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ANIMATION) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                WrapperPlayServerAnimation packet = new WrapperPlayServerAnimation(event.getPacket());
+                UUID uuid = ids.get(packet.getEntityID());
+                if (uuid != null) {
+                    String serialised = PacketSerialiser.ANIMATION(uuid, (byte) packet.getAnimation());
+                    System.out.println(serialised);
+                    sendSerialisedPacket(serialised);
+                }
+            }
+        });
     }
 
     public void sendSerialisedPacket(String data) {

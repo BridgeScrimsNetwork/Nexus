@@ -66,7 +66,13 @@ public class Stand {
         DataWatcher dataWatcher = player.getDataWatcher();
         dataWatcher.watch(0, metadata);
         PacketUtils.pushPacketGlobally(
-                new PacketPlayOutEntityMetadata(player.getId(),dataWatcher, false)
+                new PacketPlayOutEntityMetadata(player.getId(), dataWatcher, false)
+        );
+    }
+
+    public void animation(byte animation) {
+        PacketUtils.pushPacketGlobally(
+                new PacketPlayOutAnimation(player, animation) // WHY!! WHY DO SOME PACKETS TAKE ENTITIES AND SOME TAKE IDS!! I HATE IT! I HATE IT HERE!
         );
     }
 }

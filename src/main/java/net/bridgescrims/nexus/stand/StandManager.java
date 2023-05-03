@@ -84,6 +84,11 @@ public class StandManager {
 
                 getStand(uuid).metadata(metadata);
                 break;
+        case "ANIMATION":
+            byte animation = Byte.parseByte(split[2]);
+
+            getStand(uuid).animation(animation);
+            break;
         }
     }
 }

@@ -24,4 +24,8 @@ public class PacketSerialiser {
     public static String ENTITY_METADATA(UUID uuid, byte metadata) {
         return "ENTITY_METADATA" + "|" + uuid.toString() + "|" + metadata;
     }
+
+    public static String ANIMATION(UUID uuid, byte animation) {
+        return "ANIMATION" + "|" + uuid.toString() + "|" + animation;
+    }
 }
