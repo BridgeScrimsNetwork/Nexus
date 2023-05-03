@@ -28,4 +28,8 @@ public class PacketSerialiser {
     public static String ANIMATION(UUID uuid, byte animation) {
         return "ANIMATION" + "|" + uuid.toString() + "|" + animation;
     }
+
+    public static String USE_ENTITY(UUID uuid, UUID source, String action) {
+        return "USE_ENTITY" + "|" + uuid.toString() + "|" + source.toString() + "|" + action;
+    }
 }

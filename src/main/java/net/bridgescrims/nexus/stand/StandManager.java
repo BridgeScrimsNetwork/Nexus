@@ -1,24 +1,41 @@
 package net.bridgescrims.nexus.stand;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import net.bridgescrims.nexus.Nexus;
 import net.minecraft.server.v1_8_R3.DataWatcher;
+import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class StandManager {
     public HashMap<UUID, Stand> stands;
+    public HashMap<Integer, Stand> standIds;
+    public HashMap<Integer, UUID> idUuids;
 
     public StandManager() {
         stands = new HashMap<>();
+        standIds = new HashMap<>();
+        idUuids = new HashMap<>();
     }
 
     public void createStand(UUID uuid, String username, double x, double y, double z) {
         Stand stand = new Stand(uuid, username, x, y, z);
         stands.put(uuid, stand);
+        standIds.put(stand.player.getId(), stand);
+        idUuids.put(stand.player.getId(), uuid);
     }
 
     public Stand getStand(UUID uuid) {
         return stands.get(uuid);
+    }
+
+    public Stand getStandById(Integer id) {
+        return stands.get(id);
+    }
+
+    public UUID getUUIDById(Integer id) {
+        return idUuids.get(id);
     }
 
     public void sendSerialisedPacket(String packet) {
@@ -89,6 +106,17 @@ public class StandManager {
 
             getStand(uuid).animation(animation);
             break;
-        }
+            // THIS IS SO FUCKED LOL
+//        case "USE_ENTITY":
+//            UUID source = UUID.fromString(split[2]);
+//            EnumWrappers.EntityUseAction action = EnumWrappers.EntityUseAction.valueOf(split[3]);
+//
+//            if (action.equals(EnumWrappers.EntityUseAction.ATTACK)) {
+//                Nexus.INSTANCE.getServer().getPlayer(uuid).damage(0, Nexus.INSTANCE.getStandManager().getStand(source).player.getBukkitEntity());
+//                Nexus.INSTANCE.getServer().getPlayer(uuid).damage(0);
+//                Nexus.INSTANCE.getServer().getPlayer(uuid).setVelocity(Nexus.INSTANCE.getStandManager().getStand(source).player.getBukkitEntity().getLocation().getDirection().multiply(2));
+//            }
+//            break;
+//        } /\
     }
 }
