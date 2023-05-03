@@ -101,11 +101,11 @@ public class StandManager {
 
                 getStand(uuid).metadata(metadata);
                 break;
-        case "ANIMATION":
-            byte animation = Byte.parseByte(split[2]);
+            case "ANIMATION":
+                byte animation = Byte.parseByte(split[2]);
 
-            getStand(uuid).animation(animation);
-            break;
+                getStand(uuid).animation(animation);
+                break;
             // THIS IS SO FUCKED LOL
 //        case "USE_ENTITY":
 //            UUID source = UUID.fromString(split[2]);
@@ -118,5 +118,6 @@ public class StandManager {
 //            }
 //            break;
 //        } /\
+        }
     }
 }
